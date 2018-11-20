@@ -8,6 +8,9 @@ public class User {
 	private String name;
 	private Date birthdate;
 
+	public User() {
+	}
+
 	public User(Integer id, String name, Date birthdate) {
 		super();
 		this.id = id;

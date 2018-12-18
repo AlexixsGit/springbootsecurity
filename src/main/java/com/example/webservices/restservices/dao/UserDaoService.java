@@ -1,58 +1,40 @@
 package com.example.webservices.restservices.dao;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-
+import com.example.webservices.restservices.model.User;
+import com.example.webservices.restservices.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.example.webservices.restservices.model.User;
+import java.util.List;
+import java.util.Optional;
 
 @Component
 public class UserDaoService {
-	private static List<User> users = new ArrayList<>();
-	private static int usersCount = 2;
 
-	static {
-		users.add(new User(1, "Alexis", new Date()));
-		users.add(new User(2, "Carolina", new Date()));
-	}
+    @Autowired
+    private UserRepository userRepository;
 
-	public List<User> findAll() {
-		return users;
-	}
 
-	public User save(User user) {
+    public List<User> findAll() {
+        return this.userRepository.findAll();
+    }
 
-		if (user.getId() == null) {
-			user.setId(usersCount++);
-		}
-		users.add(user);
-		return user;
-	}
+    public User save(User user) {
+        return this.userRepository.save(user);
+    }
 
-	public User findOne(int id) {
-		for (User us : users) {
-			if (us.getId() == id) {
-				return us;
-			}
-		}
-		return null;
-	}
+    public Optional<User> findOne(Long id) {
+        return this.userRepository.findById(id);
+    }
 
-	public User deleteById(int id) {
+    public boolean deleteById(Long id) {
+        Optional<User> user = this.userRepository.findById(id);
 
-		Iterator<User> iter = users.iterator();
-		while (iter.hasNext()) {
-			User user = iter.next();
-
-			if (user.getId() == id) {
-				users.remove(user);
-				return user;
-			}
-		}
-		return null;
-	}
+        if (user.isPresent()) {
+            this.userRepository.delete(user.get());
+            return true;
+        }
+        return false;
+    }
 
 }

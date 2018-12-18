@@ -46,8 +46,13 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{id}")
-    public void deleteUser(@PathVariable("id") Long id) {
-        this.service.deleteById(id);
+    public String deleteUser(@PathVariable("id") Long id) {
+
+        if (this.service.deleteById(id)) {
+            return "User deleted successfully";
+        } else {
+            return "User could not be deleted";
+        }
     }
 
 }
